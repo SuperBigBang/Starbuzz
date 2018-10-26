@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.arellomobile.mvp.MvpAppCompatActivity;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.hfad.starbuzz.screen.topLevelActivity.TopLevelActivity;
+import com.hfad.starbuzz.screen.topLevelActivity.TopLevelViewActivity;
 
 public class SplashActivity extends MvpAppCompatActivity implements SplashView {
 
@@ -24,9 +24,9 @@ public class SplashActivity extends MvpAppCompatActivity implements SplashView {
     public void setAuthorized(boolean isAuthorized) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-            startActivity(new Intent(this, TopLevelActivity.class), bundle);
+            startActivity(new Intent(this, TopLevelViewActivity.class), bundle);
         } else {
-            startActivity(new Intent(this, TopLevelActivity.class));
+            startActivity(new Intent(this, TopLevelViewActivity.class));
         }
     }
 }

@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".screen.topLevelActivity.TopLevelActivity"/>
+        <activity android:name=".screen.topLevelActivity.TopLevelViewActivity"/>
 
         <activity android:name=".screen.drinkCategoryActivity.DrinkCategoryActivity" />
 
