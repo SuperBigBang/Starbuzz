@@ -1,18 +1,20 @@
-package com.hfad.starbuzz;
+package com.hfad.starbuzz.screen.drinkCategoryActivity;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.hfad.starbuzz.model.DrinkModel;
+import com.hfad.starbuzz.screen.drinkActivity.DrinkActivity;
+
 public class DrinkCategoryActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ListView listView=getListView();
-        ArrayAdapter<Drink> listadapter = new ArrayAdapter<Drink>(this,android.R.layout.simple_list_item_1, Drink.drinks);
+        ArrayAdapter<DrinkModel> listadapter = new ArrayAdapter<DrinkModel>(this,android.R.layout.simple_list_item_1, DrinkModel.drinks);
         listView.setAdapter(listadapter);
     }
 
