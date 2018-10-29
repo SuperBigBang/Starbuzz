@@ -13,9 +13,8 @@ import com.hfad.starbuzz.screen.drinkActivity.DrinkActivity;
 public class DrinkCategoryActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ListView listView=getListView();
-        ArrayAdapter<DrinkModel> listadapter = new ArrayAdapter<DrinkModel>(this,android.R.layout.simple_list_item_1, DrinkModel.drinks);
-        listView.setAdapter(listadapter);
+        ListView listView = getListView();
+        listView.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, DrinkModel.drinks));
     }
 
     @Override
