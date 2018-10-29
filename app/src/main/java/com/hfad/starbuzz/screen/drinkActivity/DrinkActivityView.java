@@ -1,11 +1,11 @@
-package com.hfad.starbuzz.screen.splash;
+package com.hfad.starbuzz.screen.drinkActivity;
 
 import com.arellomobile.mvp.MvpView;
 import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(OneExecutionStateStrategy.class)
-public interface SplashView extends MvpView {
+public interface DrinkActivityView extends MvpView {
 
-    void setAuthorized(boolean isAuthorized);
+    void showSelectedDrink(int imageResourceId, String name, String description);
 }

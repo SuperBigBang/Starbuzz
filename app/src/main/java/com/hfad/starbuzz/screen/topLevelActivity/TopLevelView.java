@@ -5,9 +5,8 @@ import com.arellomobile.mvp.viewstate.strategy.OneExecutionStateStrategy;
 import com.arellomobile.mvp.viewstate.strategy.SkipStrategy;
 import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
-@StateStrategyType(SkipStrategy.class)
+@StateStrategyType(OneExecutionStateStrategy.class)
 public interface TopLevelView extends MvpView {
 
-    @StateStrategyType(OneExecutionStateStrategy.class)
     void showDrinkCategoryActivity();
 }

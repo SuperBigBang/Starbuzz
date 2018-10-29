@@ -16,7 +16,6 @@ public class SplashActivity extends MvpAppCompatActivity implements SplashView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getMvpDelegate().onAttach();
     }
 
