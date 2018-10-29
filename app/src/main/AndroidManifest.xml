@@ -24,7 +24,7 @@
 
         <activity android:name=".screen.drinkCategoryActivity.DrinkCategoryActivity" />
 
-        <activity android:name=".screen.drinkActivity.DrinkActivity"></activity>
+        <activity android:name=".screen.drinkActivity.DrinkActivity" />
     </application>
 
 </manifest>
