@@ -10,16 +10,16 @@ import com.hfad.starbuzz.model.DrinkModel;
 public class DrinkActivityPresenter extends MvpPresenter<DrinkActivityView> {
     public static final String EXTRA_DRINKNO = "drinkNo";
 
-    private Intent intent;
+    private Integer drinkno;
     private DrinkModel drink;
     private Integer mImageResourceId;
     private String mName;
     private String mDescription;
 
     public void onGetSelectedDrinkFromIntent(Intent intent) {
-        if (this.intent==null || intent.getExtras().getInt(EXTRA_DRINKNO)!=(this.intent.getExtras().getInt(EXTRA_DRINKNO))) {
-            this.intent=intent;
-            drink= DrinkModel.drinks[this.intent.getExtras().getInt(EXTRA_DRINKNO)];
+        if (this.drinkno==null || intent.getExtras().getInt(EXTRA_DRINKNO)!=(this.drinkno)) {
+            this.drinkno=intent.getExtras().getInt(EXTRA_DRINKNO);
+            drink= DrinkModel.drinks[this.drinkno];
         mImageResourceId=drink.getImageResourceId();
         mName=drink.getName();
         mDescription=drink.getDescription();
@@ -29,11 +29,6 @@ public class DrinkActivityPresenter extends MvpPresenter<DrinkActivityView> {
 
     @Override
     public void onDestroy() {
-        intent=null;
-        drink=null;
-        mImageResourceId=null;
-        mName=null;
-        mDescription=null;
         super.onDestroy();
     }
 }
