@@ -20,7 +20,7 @@ public class DrinkActivityPresenter extends MvpPresenter<DrinkActivityView> {
         if (this.drinkno == null || intent.getExtras().getInt(EXTRA_DRINKNO) != (this.drinkno)) {
             this.drinkno = intent.getExtras().getInt(EXTRA_DRINKNO);
             String[] drink = ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule()
-                    .getItemSourceFromDatabase(Integer.toString(++drinkno),
+                    .getItemSourceFromDatabase(Integer.toString(drinkno),
                             ExtendApplication.getBaseComponent().getContext());
             mName = drink[0];
             mDescription = drink[1];

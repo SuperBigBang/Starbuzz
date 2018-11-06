@@ -1,4 +1,4 @@
-package com.hfad.starbuzz.model;
+/*package com.hfad.starbuzz.model; DELETED/NOT USED
 
 import com.hfad.starbuzz.R;
 
@@ -36,3 +36,4 @@ public class DrinkModel {
         return this.name;
     }
 }
+*/

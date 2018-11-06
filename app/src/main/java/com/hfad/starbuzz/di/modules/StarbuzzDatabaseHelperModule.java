@@ -20,7 +20,8 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
     private static final String DB_NAME = "starbuzz";
     private static final int DB_VERSION = 4;
     private SQLiteDatabase mDatabase;
-    private SQLiteOpenHelper mStarbuzzDatabaseHelper;
+    //   private SQLiteOpenHelper mStarbuzzDatabaseHelper;
+    private Cursor mCursor;
 
     private static final String TABLE = "DRINK";
     private static final String NAME = "NAME";
@@ -118,5 +119,27 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
         }
         return new String[]{nameText, descriptionText, photoId};
     }
+
+    public Cursor getCursor(Context context) {
+        try {
+            SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelperModule(context);
+            mDatabase = starbuzzDatabaseHelper.getReadableDatabase();
+            mCursor = mDatabase.query("DRINK",
+                    new String[]{"_id", "NAME"},
+                    null, null, null, null, null);
+        } catch (SQLiteException e) {
+            Toast toast = Toast.makeText(context, "Database unavailable", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        return mCursor;
+    }
+
+    public void closeDatabaseAndCursor() {
+        mCursor.close();
+        mDatabase.close();
+        mCursor = null;
+        mDatabase = null;
+    }
+
 }
 
