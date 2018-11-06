@@ -7,5 +7,7 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 @StateStrategyType(OneExecutionStateStrategy.class)
 public interface DrinkActivityView extends MvpView {
 
-    void showSelectedDrink(int imageResourceId, String name, String description);
+    void showSelectedDrink(int imageResourceId, String name, String description, boolean favorite);
+
+    void changeFavoriteCheckBoxState(boolean favorite);
 }

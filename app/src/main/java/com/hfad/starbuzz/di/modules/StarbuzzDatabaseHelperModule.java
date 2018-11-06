@@ -18,19 +18,28 @@ import dagger.Provides;
 @Module
 public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
     private static final String DB_NAME = "starbuzz";
-    private static final int DB_VERSION = 4;
-    private SQLiteDatabase mDatabase;
-    //   private SQLiteOpenHelper mStarbuzzDatabaseHelper;
-    private Cursor mCursor;
-
+    private static final int DB_VERSION = 5;
     private static final String TABLE = "DRINK";
     private static final String NAME = "NAME";
     private static final String DESCRIPTION = "DESCRIPTION";
     private static final String IMAGE_RESOURCE_ID = "IMAGE_RESOURCE_ID";
+    private static final String FAVORITE = "FAVORITE";
+    private SQLiteDatabase mDatabase;
+    //   private SQLiteOpenHelper mStarbuzzDatabaseHelper;
+    private Cursor mCursor;
 
 
     public StarbuzzDatabaseHelperModule(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
+    }
+
+    public static void insertDrink(SQLiteDatabase db, String name,
+                                   String description, int resourceId) {
+        ContentValues drinkValues = new ContentValues();
+        drinkValues.put(NAME, name);
+        drinkValues.put(DESCRIPTION, description);
+        drinkValues.put(IMAGE_RESOURCE_ID, resourceId);
+        db.insert(TABLE, null, drinkValues);
     }
 
     @Override
@@ -45,17 +54,8 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
         mDatabase = db;
     }
 
-    public static void insertDrink(SQLiteDatabase db, String name,
-                                   String description, int resourceId) {
-        ContentValues drinkValues = new ContentValues();
-        drinkValues.put(NAME, name);
-        drinkValues.put(DESCRIPTION, description);
-        drinkValues.put(IMAGE_RESOURCE_ID, resourceId);
-        db.insert(TABLE, null, drinkValues);
-    }
-
     private void updateMyDatabase(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if (oldVersion < 1) {
+     /*   if (oldVersion < 1) {
             db.execSQL("CREATE TABLE DRINK ("
                     + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "NAME TEXT, "
@@ -67,9 +67,11 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
         }
         if (oldVersion < 2) {
             db.execSQL("ALTER TABLE DRINK ADD COLUMN FAVORITE NUMERIC");
+        } */
+        if (oldVersion > 0 && oldVersion < 4) {
+            db.execSQL("DROP TABLE DRINK");
         }
         if (oldVersion < 4) {
-            db.execSQL("DROP TABLE DRINK");
             db.execSQL("CREATE TABLE DRINK ("
                     + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "NAME TEXT, "
@@ -78,6 +80,9 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
             insertDrink(db, "Cappuccino", "Espresso, hot milk and steamed-milk foam", R.drawable.cappuccino);
             insertDrink(db, "Latte", "Espresso and steamed milk", R.drawable.latte);
             insertDrink(db, "Filter", "Our best drip coffee", R.drawable.filter);
+        }
+        if (oldVersion < 5) {
+            db.execSQL("ALTER TABLE DRINK ADD COLUMN FAVORITE NUMERIC");
         }
     }
 
@@ -91,33 +96,30 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
         String nameText = "";
         String descriptionText = "";
         String photoId = "";
-        SQLiteDatabase db = null;
-        Cursor cursor = null;
+        String favorite = "";
+
         try {
             SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelperModule(context);
-            db = starbuzzDatabaseHelper.getReadableDatabase();
-            cursor = db.query(TABLE,
-                    new String[]{NAME, DESCRIPTION, IMAGE_RESOURCE_ID},
+            mDatabase = starbuzzDatabaseHelper.getReadableDatabase();
+            mCursor = mDatabase.query(TABLE,
+                    new String[]{NAME, DESCRIPTION, IMAGE_RESOURCE_ID, FAVORITE},
                     "_id = ?",
                     new String[]{drinkNO},
                     null, null, null);
-            if (cursor.moveToFirst()) {
-                nameText = cursor.getString(0);
-                descriptionText = cursor.getString(1);
-                photoId = cursor.getString(2);
+            if (mCursor.moveToFirst()) {
+                nameText = mCursor.getString(0);
+                descriptionText = mCursor.getString(1);
+                photoId = mCursor.getString(2);
+                favorite = mCursor.getString(3);
             }
-            cursor.close();
-            db.close();
-
+            closeDatabaseAndCursor();
         } catch (SQLiteException e) {
-            if (cursor != null || db != null) {
-                cursor.close();
-                db.close();
+            if (mCursor != null || mDatabase != null) {
+                closeDatabaseAndCursor();
             }
-            Toast toast = Toast.makeText(context, "Database unavailable", Toast.LENGTH_SHORT);
-            toast.show();
+            makeSQLiteExceptionTOAST(context);
         }
-        return new String[]{nameText, descriptionText, photoId};
+        return new String[]{nameText, descriptionText, photoId, favorite};
     }
 
     public Cursor getCursor(Context context) {
@@ -128,18 +130,40 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
                     new String[]{"_id", "NAME"},
                     null, null, null, null, null);
         } catch (SQLiteException e) {
-            Toast toast = Toast.makeText(context, "Database unavailable", Toast.LENGTH_SHORT);
-            toast.show();
+            if (mCursor != null || mDatabase != null) {
+                closeDatabaseAndCursor();
+            }
+            makeSQLiteExceptionTOAST(context);
         }
         return mCursor;
     }
 
     public void closeDatabaseAndCursor() {
-        mCursor.close();
-        mDatabase.close();
+        if (mCursor != null) mCursor.close();
+        if (mDatabase != null) mDatabase.close();
         mCursor = null;
         mDatabase = null;
     }
 
+    public void editDatabase(ContentValues contentValues, Context context, String id) {
+        try {
+            SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelperModule(context);
+            mDatabase = starbuzzDatabaseHelper.getWritableDatabase();
+            mDatabase.update("DRINK", contentValues, "_id = ?", new String[]{id});
+            mDatabase.close();
+            mDatabase = null;
+        } catch (SQLiteException e) {
+            if (mDatabase != null) {
+                mDatabase.close();
+                mDatabase = null;
+            }
+            makeSQLiteExceptionTOAST(context);
+        }
+    }
+
+    private void makeSQLiteExceptionTOAST(Context context) {
+        Toast toast = Toast.makeText(context, "Database unavailable", Toast.LENGTH_SHORT);
+        toast.show();
+    }
 }
 

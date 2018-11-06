@@ -1,6 +1,8 @@
 package com.hfad.starbuzz.screen.drinkActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +27,9 @@ public class DrinkActivity extends MvpAppCompatActivity implements DrinkActivity
     @BindView(R.id.description)
     TextView descriptionView;
 
+    @BindView(R.id.favorite)
+    CheckBox favoriteCheckBox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +43,26 @@ public class DrinkActivity extends MvpAppCompatActivity implements DrinkActivity
     }
 
     @Override
-    public void showSelectedDrink(int imageResourceId, String name, String description) {
+    public void showSelectedDrink(int imageResourceId, String name, String description, boolean favorite) {
         imageView.setImageResource(imageResourceId);
         imageView.setContentDescription(name);
         nameView.setText(name);
         descriptionView.setText(description);
+        favoriteCheckBox.setChecked(favorite);
+    }
+
+    public void onFavoriteClicked(View view) {
+        mDrinkActivityPresenter.onFavoriteCheckBoxClicked(favoriteCheckBox.isChecked());
+    }
+
+    @Override
+    public void changeFavoriteCheckBoxState(boolean favorite) {
+        favoriteCheckBox.setChecked(favorite);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDrinkActivityPresenter.onActivityDestroy();
     }
 }

@@ -15,6 +15,15 @@ public class ExtendApplication extends Application {
 
     private static BaseComponent sBaseComponent;
 
+    public static BaseComponent getBaseComponent() {
+        return sBaseComponent;
+    }
+
+    @VisibleForTesting
+    public static void setBaseComponent(@NonNull BaseComponent baseComponent) {
+        sBaseComponent = baseComponent;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -28,14 +37,5 @@ public class ExtendApplication extends Application {
                 .starbuzzDatabaseHelperModule(new StarbuzzDatabaseHelperModule(this))
                 .build();
 
-    }
-
-    public static BaseComponent getBaseComponent() {
-        return sBaseComponent;
-    }
-
-    @VisibleForTesting
-    public static void setBaseComponent(@NonNull BaseComponent baseComponent) {
-        sBaseComponent = baseComponent;
     }
 }
