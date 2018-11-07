@@ -63,6 +63,6 @@ public class DrinkActivity extends MvpAppCompatActivity implements DrinkActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mDrinkActivityPresenter.onActivityDestroy();
+        //    mDrinkActivityPresenter.onActivityDestroy();
     }
 }

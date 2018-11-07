@@ -10,8 +10,6 @@ import com.hfad.starbuzz.ExtendApplication;
 @InjectViewState
 public class DrinkActivityPresenter extends MvpPresenter<DrinkActivityView> {
 
-    public static final String EXTRA_DRINKNO = "drinkNo";
-
     private Integer drinkno;
     private Integer mImageResourceId;
     private String mName;
@@ -20,8 +18,8 @@ public class DrinkActivityPresenter extends MvpPresenter<DrinkActivityView> {
 
     public void onGetSelectedDrinkFromIntent(Intent intent) {
         if (mName == null) {
-            if (this.drinkno == null || intent.getExtras().getInt(EXTRA_DRINKNO) != (this.drinkno)) {
-                this.drinkno = intent.getExtras().getInt(EXTRA_DRINKNO);
+            if (this.drinkno == null || intent.getExtras().getInt(ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule().EXTRA_DRINKNO) != (this.drinkno)) {
+                this.drinkno = intent.getExtras().getInt(ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule().EXTRA_DRINKNO);
                 String[] drink = ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule()
                         .getItemSourceFromDatabase(Integer.toString(drinkno),
                                 ExtendApplication.getBaseComponent().getContext());

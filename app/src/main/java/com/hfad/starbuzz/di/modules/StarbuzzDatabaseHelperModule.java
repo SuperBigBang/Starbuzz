@@ -17,6 +17,7 @@ import dagger.Provides;
 
 @Module
 public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
+    public static final String EXTRA_DRINKNO = "drinkNo";
     private static final String DB_NAME = "starbuzz";
     private static final int DB_VERSION = 5;
     private static final String TABLE = "DRINK";
@@ -129,6 +130,23 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
             mCursor = mDatabase.query("DRINK",
                     new String[]{"_id", "NAME"},
                     null, null, null, null, null);
+        } catch (SQLiteException e) {
+            if (mCursor != null || mDatabase != null) {
+                closeDatabaseAndCursor();
+            }
+            makeSQLiteExceptionTOAST(context);
+        }
+        return mCursor;
+    }
+
+    public Cursor getCursorForFavoritesList(Context context) {
+        try {
+            SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelperModule(context);
+            mDatabase = starbuzzDatabaseHelper.getReadableDatabase();
+            mCursor = mDatabase.query("DRINK",
+                    new String[]{"_id", "NAME"},
+                    FAVORITE + " = 1",
+                    null, null, null, null);
         } catch (SQLiteException e) {
             if (mCursor != null || mDatabase != null) {
                 closeDatabaseAndCursor();

@@ -10,7 +10,6 @@ import android.widget.SimpleCursorAdapter;
 
 import com.hfad.starbuzz.ExtendApplication;
 import com.hfad.starbuzz.screen.drinkActivity.DrinkActivity;
-import com.hfad.starbuzz.screen.drinkActivity.DrinkActivityPresenter;
 
 public class DrinkCategoryActivity extends ListActivity {
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +20,7 @@ public class DrinkCategoryActivity extends ListActivity {
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent = new Intent(DrinkCategoryActivity.this, DrinkActivity.class);
-        intent.putExtra(DrinkActivityPresenter.EXTRA_DRINKNO, (int) id);
+        intent.putExtra(ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule().EXTRA_DRINKNO, (int) id);
         startActivity(intent);
     }
 
@@ -40,6 +39,6 @@ public class DrinkCategoryActivity extends ListActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule().closeDatabaseAndCursor();
+        //     ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule().closeDatabaseAndCursor();
     }
 }
