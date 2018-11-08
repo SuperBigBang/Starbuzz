@@ -17,8 +17,12 @@ public class TopLevelPresenter extends MvpPresenter<TopLevelView> {
     }
 
     public void fillListFavorites() {
-        getViewState().fillFavoritesList(ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule()
-                .getCursorForFavoritesList(ExtendApplication.getBaseComponent().getContext()));
+     /*   getViewState().fillFavoritesList(ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule()
+                .getCursorForFavoritesList(ExtendApplication.getBaseComponent().getContext()));*/
+        ExtendApplication.getBaseComponent().getStarbuzzDatabaseHelperModule().getCursorForFavoritesList(
+                ExtendApplication.getBaseComponent().getContext(),
+                getViewState()::fillFavoritesList
+        );
     }
 
     public void onFavoritesItemClick(int id) {

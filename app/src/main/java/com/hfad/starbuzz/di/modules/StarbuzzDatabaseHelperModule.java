@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.widget.Toast;
 
 import com.hfad.starbuzz.R;
@@ -139,21 +140,12 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
         return mCursor;
     }
 
-    public Cursor getCursorForFavoritesList(Context context) {
-        try {
-            SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelperModule(context);
-            mDatabase = starbuzzDatabaseHelper.getReadableDatabase();
-            mCursor = mDatabase.query("DRINK",
-                    new String[]{"_id", "NAME"},
-                    FAVORITE + " = 1",
-                    null, null, null, null);
-        } catch (SQLiteException e) {
-            if (mCursor != null || mDatabase != null) {
-                closeDatabaseAndCursor();
-            }
-            makeSQLiteExceptionTOAST(context);
-        }
-        return mCursor;
+  /* public Cursor getCursorForFavoritesList(Context context) {
+}*/
+
+    public void getCursorForFavoritesList(Context context, GetCursorForFavoritesListCallback callback) {
+        GetCursorForFavoritesListTask getCursorForFavoritesListTask = new GetCursorForFavoritesListTask(callback);
+        getCursorForFavoritesListTask.execute(context);
     }
 
     public void closeDatabaseAndCursor() {
@@ -182,6 +174,43 @@ public class StarbuzzDatabaseHelperModule extends SQLiteOpenHelper {
     private void makeSQLiteExceptionTOAST(Context context) {
         Toast toast = Toast.makeText(context, "Database unavailable", Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    public interface GetCursorForFavoritesListCallback {
+        void getCursorForFavoritesList(Cursor cursor);
+    }
+
+    class GetCursorForFavoritesListTask extends AsyncTask<Context, Void, Cursor> {
+        private final GetCursorForFavoritesListCallback callback;
+
+        GetCursorForFavoritesListTask(GetCursorForFavoritesListCallback callback) {
+            this.callback = callback;
+        }
+
+        @Override
+        protected Cursor doInBackground(Context... contexts) {
+            try {
+                SQLiteOpenHelper starbuzzDatabaseHelper = new StarbuzzDatabaseHelperModule(contexts[0]);
+                mDatabase = starbuzzDatabaseHelper.getReadableDatabase();
+                mCursor = mDatabase.query("DRINK",
+                        new String[]{"_id", "NAME"},
+                        FAVORITE + " = 1",
+                        null, null, null, null);
+            } catch (SQLiteException e) {
+                if (mCursor != null || mDatabase != null) {
+                    closeDatabaseAndCursor();
+                }
+                makeSQLiteExceptionTOAST(contexts[0]);
+            }
+            return mCursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor cursor) {
+            if (callback != null) {
+                callback.getCursorForFavoritesList(cursor);
+            }
+        }
     }
 }
 
